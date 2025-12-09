@@ -158,8 +158,8 @@ if "preds" in st.session_state:
         else:
             st.error(f"DENIED — Probability: {selected_proba:.3f}")
 
-        st.write("Feature values:")
-        st.dataframe(results.iloc[[user_idx]])
+        #st.write("Feature values:")
+        #st.dataframe(results.iloc[[user_idx]])
 
 st.markdown("---")
 st.subheader("Notes & recommendations")
