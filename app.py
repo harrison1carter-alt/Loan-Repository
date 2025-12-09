@@ -127,6 +127,7 @@ if st.button("Predict") and input_df is not None:
 
     except Exception as e:
         st.error(f"Prediction error: {e}")
+        st.exception(e)
 
 # --- SHOW LOOKUP SECTION IF WE HAVE PREDICTIONS ---
 if "preds" in st.session_state:
@@ -159,12 +160,6 @@ if "preds" in st.session_state:
 
         st.write("Feature values:")
         st.dataframe(results.iloc[[user_idx]])
-
-
-
-    except Exception as e:
-        st.error(f"Prediction failed: {e}")
-        st.exception(e)
 
 st.markdown("---")
 st.subheader("Notes & recommendations")
