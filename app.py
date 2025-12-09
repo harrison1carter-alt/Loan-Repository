@@ -72,10 +72,14 @@ if uploaded_file is not None:
         st.write("Uploaded CSV preview:")
         st.dataframe(df_raw.head())
         input_df = prepare_df_from_uploaded(df_raw, feature_names)
+
+        # FIX: Persist input_df
+        st.session_state["input_df"] = input_df
+
     except Exception as e:
         st.error(f"Error reading uploaded CSV: {e}")
 
-elif json_input.strip():
+elif json_input.strip() != "":
     try:
         obj = json.loads(json_input)
         if isinstance(obj, dict):
@@ -83,10 +87,15 @@ elif json_input.strip():
             st.write("Parsed JSON input:")
             st.json(obj)
             input_df = prepare_df_from_uploaded(df_raw, feature_names)
+
+            # FIX: Persist input_df
+            st.session_state["input_df"] = input_df
+
         else:
-            st.error("JSON must be a dict (single row).")
+            st.error("JSON must be a dict.")
     except Exception as e:
         st.error(f"Could not parse JSON: {e}")
+
 
 else:
     st.info("Upload a processed CSV or paste JSON to make predictions.")
@@ -98,6 +107,9 @@ if input_df is not None and feature_names is not None:
         st.warning(f"Missing columns filled with 0: {missing[:20]}...")
     if extra:
         st.info(f"Extra columns ignored: {extra[:20]}...")
+# Restore saved input_df if it exists
+if "input_df" in st.session_state:
+    input_df = st.session_state["input_df"]
 
 # ------------------------------
 #      PREDICT BUTTON
