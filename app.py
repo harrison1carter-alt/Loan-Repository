@@ -122,29 +122,33 @@ if st.button("Predict") and input_df is not None:
         st.success("Prediction complete. See results below.")
         st.dataframe(results.head())
         # show a clearer message for first row
-
-        ordinal_map = {
-            1: "first",
-            2: "second",
-            3: "third",
-            4: "fourth",
-            5: "fifth",
-            6: "sixth",
-            7: "seventh",
-            8: "eighth",
-            9: "ninth",
-            10: "tenth"
-        }
-
-        for idx in range(len(preds)):
-            first_pred = preds[idx]
-            first_proba = proba[idx]
+    
+        # --- USER INDEX LOOKUP SECTION ---
+        st.markdown("### Look up a specific result by index")
+        
+        user_idx = st.number_input(
+            "Enter an index (0 to {}):".format(len(preds) - 1),
+            min_value=0,
+            max_value=len(preds) - 1,
+            step=1
+        )
+        
+        if st.button("Submit"):
             st.markdown("---")
-            st.subheader(ordinal_map[idx+1] + " result")
-            if first_pred == 1:
-                st.success(f"APPROVED — Probability: {first_proba:.3f}")
+            st.subheader(f"Result for index {user_idx}")
+        
+            selected_pred = preds[user_idx]
+            selected_proba = proba[user_idx]
+        
+            if selected_pred == 1:
+                st.success(f"APPROVED — Probability: {selected_proba:.3f}")
             else:
-                st.error(f"DENIED — Probability: {first_proba:.3f}")
+                st.error(f"DENIED — Probability: {selected_proba:.3f}")
+        
+            # Optional: show the row of feature values too
+            st.write("Feature values:")
+            st.dataframe(results.iloc[[user_idx]])
+
 
     except Exception as e:
         st.error(f"Prediction failed: {e}")
